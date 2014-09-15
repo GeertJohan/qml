@@ -198,6 +198,8 @@ QObject_ *hookListPropertyAt(GoAddr *addr, intptr_t reflectIndex, intptr_t setIn
 void hookListPropertyAppend(GoAddr *addr, intptr_t reflectIndex, intptr_t setIndex, QObject_ *obj);
 void hookListPropertyClear(GoAddr *addr, intptr_t reflectIndex, intptr_t setIndex);
 
+int registerResourceData(int version, const unsigned char *tree, const unsigned char *name, const unsigned char *data);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

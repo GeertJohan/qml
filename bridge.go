@@ -12,6 +12,7 @@ package qml
 import "C"
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"reflect"
@@ -23,15 +24,30 @@ import (
 )
 
 var (
-	guiFunc      = make(chan func())
-	guiDone      = make(chan struct{})
-	guiLock      = 0
-	guiMainRef   uintptr
-	guiPaintRef  uintptr
-	guiIdleRun   int32
+	guiFunc     = make(chan func())
+	guiDone     = make(chan struct{})
+	guiLock     = 0
+	guiMainRef  uintptr
+	guiPaintRef uintptr
+	guiIdleRun  int32
 
 	initialized int32
 )
+
+var ErrRegisterResourceFail = errors.New("resource registration failed")
+
+// RegisterResourceData registers resources in Qt's resource system
+func RegisterResourceData(path string, name string, data []byte) error {
+	cpath := C.CString(path)
+	defer C.free(unsafe.Pointer(cpath))
+	cname := C.CString(name)
+	defer C.free(unsafe.Pointer(cname))
+	ok := C.registerResourceData(1, (*C.uchar)(unsafe.Pointer(cpath)), (*C.uchar)(unsafe.Pointer(cname)), (*C.uchar)(unsafe.Pointer(&data[0])))
+	if ok != 0 {
+		return ErrRegisterResourceFail
+	}
+	return nil
+}
 
 func init() {
 	runtime.LockOSThread()

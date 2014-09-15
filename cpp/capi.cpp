@@ -849,4 +849,12 @@ void installLogHandler()
     qInstallMessageHandler(internalLogHandler);
 }
 
+bool qRegisterResourceData(int version, const unsigned char *tree, const unsigned char *name, const unsigned char *data);
+int registerResourceData(int version, const unsigned char *tree, const unsigned char *name, const unsigned char *data) {
+    if(qRegisterResourceData(version, tree, name, data)) {
+        return 0;
+    }
+    return 1;
+}
+
 // vim:ts=4:sw=4:et:ft=cpp
